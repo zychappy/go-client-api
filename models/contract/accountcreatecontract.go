@@ -1,9 +1,9 @@
 package contract
 
 import (
-	"github.com/sasaxie/go-client-api/common/base58"
-	"github.com/sasaxie/go-client-api/common/global"
-	"github.com/sasaxie/go-client-api/core"
+	"github.com/zychappy/go-client-api/common/base58"
+	"github.com/zychappy/go-client-api/common/global"
+	"github.com/zychappy/go-client-api/core"
 )
 
 type AccountCreateContract struct {

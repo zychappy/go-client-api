@@ -6,7 +6,7 @@ package routers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/sasaxie/go-client-api/controllers"
+	"github.com/zychappy/go-client-api/controllers"
 )
 
 func init() {

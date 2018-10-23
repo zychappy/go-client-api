@@ -3,12 +3,15 @@ package service
 import (
 	"context"
 	"crypto/ecdsa"
-	"github.com/sasaxie/go-client-api/api"
-	"github.com/sasaxie/go-client-api/common/base58"
-	"github.com/sasaxie/go-client-api/common/crypto"
-	"github.com/sasaxie/go-client-api/common/hexutil"
-	"github.com/sasaxie/go-client-api/core"
-	"github.com/sasaxie/go-client-api/util"
+	"encoding/hex"
+	"fmt"
+	"github.com/go-ethereum/crypto/sha3"
+	"github.com/zychappy/go-client-api/api"
+	"github.com/zychappy/go-client-api/common/base58"
+	"github.com/zychappy/go-client-api/common/crypto"
+	"github.com/zychappy/go-client-api/common/hexutil"
+	"github.com/zychappy/go-client-api/core"
+	"github.com/zychappy/go-client-api/util"
 	"google.golang.org/grpc"
 	"log"
 	"strconv"
@@ -386,6 +389,68 @@ func (g *GrpcClient) Transfer(ownerKey *ecdsa.PrivateKey, toAddress string,
 
 	result, err := g.Client.BroadcastTransaction(ctx,
 		transferTransaction)
+
+	if err != nil {
+		log.Fatalf("transfer error: %v", err)
+	}
+
+	return result
+}
+
+func GetAddressByte(puk []byte) []byte {
+	fmt.Printf("pubkey:%x\n", puk)
+	sha3 := sha3.NewKeccak256()
+	sha3.Write(puk)
+	pub := sha3.Sum(nil)
+	fmt.Printf("sha3:%x\n", pub)
+	pub20 := pub[len(pub)-20:]
+	pubmain := append([]byte{0x41}, pub20...)
+	return pubmain
+}
+
+func (g *GrpcClient) Transfer2(ownerKey *ecdsa.PrivateKey, toAddress string,
+	amount int64) *api.Return {
+
+	transferContract := new(core.TransferContract)
+	ownPub := GetAddressByte(append(ownerKey.X.Bytes(), ownerKey.Y.Bytes()...))
+	transferContract.OwnerAddress = ownPub
+	fmt.Println(hex.EncodeToString(transferContract.OwnerAddress))
+	toAddr := base58.DecodeCheck(toAddress)
+	transferContract.ToAddress = toAddr
+	fmt.Println(hex.EncodeToString(toAddr))
+	transferContract.Amount = amount
+
+	transferTransaction, err := g.Client.CreateTransaction(context.
+		Background(), transferContract)
+
+	if err != nil {
+		log.Fatalf("transfer error: %v", err)
+	}
+
+	if transferTransaction == nil || len(transferTransaction.
+		GetRawData().GetContract()) == 0 {
+		log.Fatalf("transfer error: invalid transaction")
+	}
+
+	util.SignTransaction(transferTransaction, ownerKey)
+
+	result, err := g.Client.BroadcastTransaction(context.Background(),
+		transferTransaction)
+
+	if err != nil {
+		log.Fatalf("transfer error: %v", err)
+	}
+
+	return result
+}
+
+func (g *GrpcClient) BroadcastTransaction(ownerKey *ecdsa.PrivateKey,
+	ts *core.Transaction) *api.Return {
+
+	util.SignTransaction(ts, ownerKey)
+
+	result, err := g.Client.BroadcastTransaction(context.Background(),
+		ts)
 
 	if err != nil {
 		log.Fatalf("transfer error: %v", err)

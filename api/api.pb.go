@@ -32,8 +32,8 @@ package api
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import protocol1 "github.com/sasaxie/go-client-api/core"
-import protocol2 "github.com/sasaxie/go-client-api/core"
+import protocol1 "github.com/zychappy/go-client-api/core"
+import protocol2 "github.com/zychappy/go-client-api/core"
 import _ "google.golang.org/genproto/googleapis/api/annotations"
 
 import (

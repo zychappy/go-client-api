@@ -1,5 +1,5 @@
 package global
 
-import "github.com/sasaxie/go-client-api/service"
+import "github.com/zychappy/go-client-api/service"
 
 var TronClient *service.GrpcClient

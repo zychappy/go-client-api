@@ -40,6 +40,6 @@ git submodule update --remote
 Example:
 
 ```sh
-go get -u github.com/sasaxie/go-client-api
+go get -u github.com/zychappy/go-client-api
 go run program/getnowblock.go -grpcAddress localhost:50051
 ```

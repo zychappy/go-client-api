@@ -3,17 +3,17 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/sasaxie/go-client-api/service"
+	"github.com/zychappy/go-client-api/service"
 	"log"
 	"strings"
 )
 
 func main() {
-	grpcAddress := flag.String("grpcAddress", "",
+	grpcAddress := flag.String("grpcAddress", "54.236.37.243:50051",
 		"gRPC address: <IP:port> example: -grpcAddress localhost:50051")
 
 	hash := flag.String("hash",
-		"",
+		"2b6f3bd46c01072d2888813980def8551a64a0dbe9c02f9dd13ae4c363f436dc",
 		"hash: <block hash>")
 
 	flag.Parse()

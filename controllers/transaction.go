@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/sasaxie/go-client-api/models"
+	"github.com/zychappy/go-client-api/models"
 
 	"github.com/astaxie/beego"
 )
